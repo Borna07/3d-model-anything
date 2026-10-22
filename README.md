@@ -32,6 +32,8 @@ The demo includes the reconstructed office and selected textures. Original scans
 
 See [the iPhone app](apps/house-capture/README.md) for building with Xcode, device requirements, scanning and sharing. Scanning needs a LiDAR-equipped iPhone or iPad. Non-LiDAR devices can import and review scans.
 
+On Windows, download the unsigned device IPA from the [iOS device IPA](https://github.com/Borna07/3d-model-anything/actions/workflows/ios-device-ipa.yml) workflow and install it with AltStore Classic. The download and install steps are in the iPhone app readme.
+
 The app is source-available here; an App Store release is a separate distribution step. Do not assume an App Store download is available yet.
 
 Export a room or session through the system share sheet and extract it into an ignored `data/captures-in/<room>/` directory. Exports keep the existing `house-capture/5` contract; changing the app name does not change the files.

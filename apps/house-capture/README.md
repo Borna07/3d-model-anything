@@ -13,6 +13,18 @@ Requires an iPhone or iPad **with LiDAR** running iOS 17+.
 
 ## Build
 
+The Xcode project is generated, not committed. `apps/house-capture/project.yml` is the project definition.
+
+| | |
+| --- | --- |
+| Generator | [XcodeGen](https://github.com/yonaskolb/XcodeGen) `project.yml` (`xcodeVersion` 27.0) |
+| Project | `HouseCapture.xcodeproj` (created by `xcodegen generate`) |
+| Scheme | `HouseCapture` |
+| Target | `HouseCapture`, iOS application |
+| Bundle ID | `com.wesbos.housecapture` |
+| Minimum iOS | 17.0 (iPhone and iPad) |
+| Dependencies | None. System frameworks only: SwiftUI, ARKit, RoomPlan, SceneKit, Metal, AVFoundation, ImageIO. No CocoaPods and no Swift packages. |
+
 ```sh
 cd apps/house-capture
 xcodegen generate          # regenerates HouseCapture.xcodeproj from project.yml (after adding files)
@@ -21,6 +33,42 @@ xcodebuild -project HouseCapture.xcodeproj -scheme HouseCapture -configuration R
 ```
 
 Or open the project in Xcode, pick your team under *Signing & Capabilities*, and run on the phone.
+
+## Install on an iPhone from Windows
+
+A Mac is not required. GitHub Actions workflow [iOS device IPA](../../.github/workflows/ios-device-ipa.yml) runs on the `xcode-27` macOS image, builds the `HouseCapture` scheme Release configuration for the `iphoneos` SDK (`generic/platform=iOS`, arm64), and uploads an unsigned IPA. The job does not use an Apple Developer certificate, provisioning profile, or repository secret. AltStore Classic signs the IPA with your Apple ID when it installs it.
+
+The phone needs iOS 17 or later. Scanning needs LiDAR. A phone without LiDAR can still install the app and import a scan.
+
+### Download the IPA
+
+1. Sign in to GitHub. Downloading a workflow artifact requires a signed-in account, including on this public repository.
+2. Open the [iOS device IPA workflow](https://github.com/Borna07/3d-model-anything/actions/workflows/ios-device-ipa.yml).
+3. Open the latest successful run. A run starts on each push that changes `apps/house-capture` or this workflow. To build again, choose **Run workflow**. The optional bundle identifier field defaults to `com.wesbos.housecapture`. Use a personal identifier such as `com.yourname.housecapture` when Apple reports that the default identifier is already registered to another developer team.
+4. Download the artifact named **HouseCapture-unsigned-ipa**. GitHub wraps it in a zip. Unzip that outer zip once. The file inside is `HouseCapture-unsigned.ipa`. Keep that `.ipa` file. The outer zip is only GitHub's artifact wrapper.
+5. Artifacts are kept for 90 days. Run the workflow again after that.
+
+### Install AltStore Classic
+
+Follow [AltStore's Windows install guide](https://faq.altstore.io/altstore-classic/how-to-install-altstore-windows). In short:
+
+1. Install the current iTunes and iCloud installers from Apple, the ones linked from that guide. The Microsoft Store copies of those apps are a separate setup and are covered by AltStore's [troubleshooting guide](https://faq.altstore.io/altstore-classic/troubleshooting-guide).
+2. Download AltServer from [altstore.io](https://altstore.io), extract it, and run `Setup.exe`.
+3. Start AltServer with **Run as administrator**, and allow it on private networks.
+4. Unlock the iPhone, connect it with a cable, and tap Trust. Open iTunes, sign in with the Apple ID you want to use for sideloading, and enable Wi-Fi sync for the phone.
+5. In the AltServer tray menu, choose **Install AltStore** and the iPhone. Enter that Apple ID and complete Apple's two-factor prompt. The password is sent to Apple by AltServer.
+6. On the iPhone, open Settings → General → VPN & Device Management, open the Apple ID profile, and tap Trust.
+7. On iOS 16 and later, open Settings → Privacy & Security → Developer Mode, turn it on, and restart. Sideloading asks for this again if it is still off.
+
+### Install this IPA
+
+Copy `HouseCapture-unsigned.ipa` into iCloud Drive with the iCloud for Windows app. On the iPhone, open AltStore, go to **My Apps**, tap **+**, and choose the IPA. Approve the Apple ID prompt.
+
+AltServer can also install it directly: hold Shift, click the AltServer tray icon, choose **Sideload .ipa…**, then choose the iPhone and `HouseCapture-unsigned.ipa`. Repeat that sideload at least every 7 days. An install started from AltStore's **+** button is the copy AltStore can refresh while AltServer is running on the same Wi-Fi network, or while the phone is plugged in.
+
+The home screen name is **3D Model Anything**. The first launch asks for the camera. Scanning stays on the phone.
+
+A free Apple ID signature lasts 7 days, and Apple allows 3 active sideloaded apps for that Apple ID. Refresh from AltStore before the week ends, with AltServer running. A paid Apple Developer account is not required for this path. This IPA has no Apple signature, so iTunes and the Files app cannot install it on their own.
 
 ## Rooms and scanning
 

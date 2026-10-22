@@ -16,6 +16,8 @@ Validated locally:
 
 The app's display name is **3D Model Anything**. `house-capture/5`, existing serialized keys, the Xcode target and `com.wesbos.housecapture` bundle identifier remain unchanged for compatibility. Contributors select their own signing team in Xcode.
 
+`.github/workflows/ios-device-ipa.yml` builds a Release arm64 iPhoneOS app on the Xcode 27 runner and uploads an unsigned IPA for AltStore Classic. That job does not use an Apple distribution certificate. It is a sideload build, and the device checks and App Store validation below still apply before a store release.
+
 Source publication does not submit the app to Apple. Before TestFlight/App Store release:
 - Verify the configured public privacy/support URLs and GitHub Issues support link.
 - Complete store pricing and reviewer contact details.
